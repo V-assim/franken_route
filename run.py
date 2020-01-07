@@ -17,6 +17,7 @@ from nets.pointer_network import PointerNetwork, CriticNetworkLSTM
 from utils import torch_load_cpu, load_problem
 
 from encoderdecoder import AttentionModel
+from held_karp import held_karp
 
 
 def run(opts):
@@ -140,6 +141,13 @@ def run(opts):
     # Start the actual training loop
     val_dataset = problem.make_dataset(
         size=opts.graph_size, num_samples=opts.val_size, filename=opts.val_dataset, distribution=opts.data_distribution)
+
+    dist = (val_dataset.transpose(1,2).repeat_interleave(opts.graph_size, 2).transpose(1,2).float() - val_dataset.repeat(1, opts.graph_size, 1).float()).norm(p=2, dim=2).view(opts.val_size, opts.graph_size, opts.graph_size)
+    DP_val_solution = [held_karp(dist[i])[0] for i in range(opts.val_size)]
+    DP_val_solution = torch.tensor(DP_val_solution)
+    DP_val_solution = DP_val_solution.mean()
+    problem.DP_cost = DP_val_solution
+
 
     if opts.resume:
         epoch_resume = int(os.path.splitext(os.path.split(opts.resume)[-1])[0].split("-")[1])
