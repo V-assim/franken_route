@@ -169,8 +169,6 @@ def train_batch(
 
     # Calculate loss
     reinforce_loss = ((cost - bl_val) * log_likelihood).mean()
-    print(f"=== REINFORCE_LOSS ===\n{reinforce_loss}")
-    print(f"=== GRAOUUUU ===\n{log_likelihood.mean()}")
     loss = reinforce_loss + bl_loss
 
     # Perform backward pass and optimization step
