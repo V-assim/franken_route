@@ -4,7 +4,7 @@ def log_values(cost, grad_norms, epoch, batch_id, step,
     grad_norms, grad_norms_clipped = grad_norms
 
     # Log values to screen
-    print('epoch: {}, train_batch_id: {}, avg_cost: {}'.format(epoch, batch_id, avg_cost))
+    print('epoch: {}, train_batch_id: {}, avg_cost: {}, reinforce_loss: {}'.format(epoch, batch_id, avg_cost, reinforce_loss))
 
     print('grad_norm: {}, clipped: {}'.format(grad_norms[0], grad_norms_clipped[0]))
 
